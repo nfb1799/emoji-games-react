@@ -5,6 +5,7 @@ import Typography from '@mui/material/Typography';
 import EmojiGuessGame from './EmojiGuessGame';
 import EmojiMemoryGame from './EmojiMemoryGame';
 import EmojiWantedGame from './EmojiWantedGame';
+import EmojiSortGame from './EmojiSortGame';
 import './App.css';
 
 function App() {
@@ -111,7 +112,33 @@ function App() {
                 Find the target emoji!
               </Typography>
             </Box>
-            {/* Add more game cards here as needed */}
+            {/* Emoji Sort Game Card */}
+            <Box
+              sx={{
+                bgcolor: 'white',
+                borderRadius: 3,
+                boxShadow: 3,
+                width: 220,
+                height: 180,
+                m: 1,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                transition: 'transform 0.15s',
+                '&:hover': { transform: 'scale(1.04)', boxShadow: 6 },
+              }}
+              onClick={() => setSelectedGame('sort')}
+            >
+              <span style={{ fontSize: 48, marginBottom: 8 }}>🗂️</span>
+              <Typography variant="h6" fontWeight={700} mb={0.5}>
+                Emoji Sort
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Sort emojis into categories!
+              </Typography>
+            </Box>
           </Box>
         </Box>
       ) : (
@@ -119,6 +146,7 @@ function App() {
           {selectedGame === 'guess' && <EmojiGuessGame />}
           {selectedGame === 'memory' && <EmojiMemoryGame />}
           {selectedGame === 'wanted' && <EmojiWantedGame />}
+          {selectedGame === 'sort' && <EmojiSortGame />}
           <Button sx={{ mt: 3 }} onClick={handleBack}>
             Back to Games
           </Button>
