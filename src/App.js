@@ -14,65 +14,116 @@ function App() {
 
   return (
     <div className="App">
-      <header className="App-header">
-        {!selectedGame && (
-          <Box>
-            <Typography variant="h3" gutterBottom>
-              Emoji Games 🎮
-            </Typography>
-            <Typography variant="h6" gutterBottom>
-              Choose a game to play:
-            </Typography>
-            <Box sx={{ display: 'flex', gap: 2, mt: 3 }}>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => setSelectedGame('guess')}
-              >
-                Emoji Guess Game
-              </Button>
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={() => setSelectedGame('memory')}
-              >
-                Emoji Memory Game
-              </Button>
-              <Button
-                variant="contained"
-                color="success"
-                onClick={() => setSelectedGame('wanted')}
-              >
-                Emoji Wanted!
-              </Button>
+      <Box sx={{ pt: 4, pb: 2 }}>
+        <Typography variant="h3" gutterBottom>
+          Emoji Games 🎮
+        </Typography>
+      </Box>
+      {!selectedGame ? (
+        <Box sx={{ width: '100%', maxWidth: 1200, mx: 'auto', px: { xs: 1, sm: 2 }, mt: 2 }}>
+          <Box
+            sx={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: 3,
+            }}
+          >
+            {/* Emoji Guess Game Card */}
+            <Box
+              sx={{
+                bgcolor: 'white',
+                borderRadius: 3,
+                boxShadow: 3,
+                width: 220,
+                height: 180,
+                m: 1,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                transition: 'transform 0.15s',
+                '&:hover': { transform: 'scale(1.04)', boxShadow: 6 },
+              }}
+              onClick={() => setSelectedGame('guess')}
+            >
+              <span style={{ fontSize: 48, marginBottom: 8 }}>🤔</span>
+              <Typography variant="h6" fontWeight={700} mb={0.5}>
+                Guess Game
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Guess the character from emojis!
+              </Typography>
             </Box>
+            {/* Emoji Memory Game Card */}
+            <Box
+              sx={{
+                bgcolor: 'white',
+                borderRadius: 3,
+                boxShadow: 3,
+                width: 220,
+                height: 180,
+                m: 1,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                transition: 'transform 0.15s',
+                '&:hover': { transform: 'scale(1.04)', boxShadow: 6 },
+              }}
+              onClick={() => setSelectedGame('memory')}
+            >
+              <span style={{ fontSize: 48, marginBottom: 8 }}>🧠</span>
+              <Typography variant="h6" fontWeight={700} mb={0.5}>
+                Memory Game
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Match emoji pairs!
+              </Typography>
+            </Box>
+            {/* Emoji Wanted Game Card */}
+            <Box
+              sx={{
+                bgcolor: 'white',
+                borderRadius: 3,
+                boxShadow: 3,
+                width: 220,
+                height: 180,
+                m: 1,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                transition: 'transform 0.15s',
+                '&:hover': { transform: 'scale(1.04)', boxShadow: 6 },
+              }}
+              onClick={() => setSelectedGame('wanted')}
+            >
+              <span style={{ fontSize: 48, marginBottom: 8 }}>🎯</span>
+              <Typography variant="h6" fontWeight={700} mb={0.5}>
+                Wanted!
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Find the target emoji!
+              </Typography>
+            </Box>
+            {/* Add more game cards here as needed */}
           </Box>
-        )}
-        {selectedGame === 'guess' && (
-          <Box>
-            <EmojiGuessGame />
-            <Button sx={{ mt: 3 }} onClick={handleBack}>
-              Back to Games
-            </Button>
-          </Box>
-        )}
-        {selectedGame === 'memory' && (
-          <Box>
-            <EmojiMemoryGame />
-            <Button sx={{ mt: 3 }} onClick={handleBack}>
-              Back to Games
-            </Button>
-          </Box>
-        )}
-        {selectedGame === 'wanted' && (
-          <Box>
-            <EmojiWantedGame />
-            <Button sx={{ mt: 3 }} onClick={handleBack}>
-              Back to Games
-            </Button>
-          </Box>
-        )}
-      </header>
+        </Box>
+      ) : (
+        <Box sx={{ width: '100%', maxWidth: 800, mx: 'auto', mt: 4, px: 2 }}>
+          {selectedGame === 'guess' && <EmojiGuessGame />}
+          {selectedGame === 'memory' && <EmojiMemoryGame />}
+          {selectedGame === 'wanted' && <EmojiWantedGame />}
+          <Button sx={{ mt: 3 }} onClick={handleBack}>
+            Back to Games
+          </Button>
+        </Box>
+      )}
     </div>
   );
 }
