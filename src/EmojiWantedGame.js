@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
@@ -12,7 +12,7 @@ const GAME_HEIGHT = 400;
 const EMOJI_SIZE = 64; // px
 const INITIAL_TIME = 5000; // ms (5 seconds)
 const TIME_INCREASE = 500; // ms per round
-const MIN_TIME = 900; // ms
+// ...existing code...
 
 function getRandomEmoji(exclude) {
   let emoji;
@@ -47,10 +47,8 @@ function EmojiWantedGame() {
   const [loseReason, setLoseReason] = useState(''); // 'timeout' or 'wrong'
   const [timeLeft, setTimeLeft] = useState(INITIAL_TIME);
   const [currentTime, setCurrentTime] = useState(INITIAL_TIME);
-  const [timer, setTimer] = useState(null);
 
-  const animationRef = useRef();
-  const emojiRefs = useRef([]);
+  // ...existing code...
 
   // Start a new round
   const startRound = () => {
@@ -128,8 +126,6 @@ function EmojiWantedGame() {
     // eslint-disable-next-line
   }, [gameState, currentTime]);
 
-  // Clean up on unmount
-  useEffect(() => () => clearTimeout(timer), [timer]);
 
   // Click handler
   const handleEmojiClick = (isWanted) => {
