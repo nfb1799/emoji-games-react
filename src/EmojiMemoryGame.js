@@ -100,9 +100,9 @@ function EmojiMemoryGame() {
   const allMatched = matchedCount === EMOJIS.length;
 
   return (
-    <Card sx={{ minWidth: 275, mb: 2 }}>
+    <Card sx={{ minWidth: 275, mb: 2, borderRadius: 4, boxShadow: 6 }}>
       <CardContent>
-        <Typography variant="h4" gutterBottom>
+        <Typography variant="h4" gutterBottom fontWeight={700}>
           Emoji Memory Game
         </Typography>
         <Typography variant="body1" gutterBottom>
@@ -116,7 +116,6 @@ function EmojiMemoryGame() {
             sx={{
               maxWidth: 320,
               margin: "0 auto",
-              // Adjust grid for a square layout (4x4 for 16 cards)
               gridTemplateColumns: "repeat(4, 1fr)",
               display: "grid",
             }}
@@ -145,6 +144,8 @@ function EmojiMemoryGame() {
                     minWidth: 0,
                     minHeight: 0,
                     p: 0,
+                    borderRadius: 2,
+                    boxShadow: card.flipped || card.matched ? 3 : 0,
                   }}
                   onClick={() => handleCardClick(idx)}
                   disabled={card.flipped || card.matched || flippedIndices.length === 2}
@@ -158,17 +159,16 @@ function EmojiMemoryGame() {
         <Typography variant="body2" sx={{ mt: 2 }}>
           Moves: {moves}
         </Typography>
-        {allMatched && (
-          <Box sx={{ mt: 2 }}>
-            <Typography variant="h6" color="success.main">
+        {allMatched ? (
+          <>
+            <Typography variant="h6" color="success.main" sx={{ mt: 2, mb: 2 }}>
               🎉 You matched all pairs in {moves} moves!
             </Typography>
-            <Button variant="contained" sx={{ mt: 2 }} onClick={handleRestart}>
+            <Button variant="contained" color="primary" sx={{ mt: 2 }} onClick={handleRestart}>
               Play Again
             </Button>
-          </Box>
-        )}
-        {!allMatched && (
+          </>
+        ) : (
           <Button variant="contained" sx={{ mt: 2 }} onClick={handleRestart}>
             Restart
           </Button>
