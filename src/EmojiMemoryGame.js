@@ -106,9 +106,9 @@ function EmojiMemoryGame() {
       borderRadius: 4, 
       boxShadow: 6,
       mx: { xs: 1, sm: 'auto' },
-      maxWidth: { xs: '100%', sm: 600 }
+      maxWidth: { xs: 'calc(100vw - 16px)', sm: 600 }
     }}>
-      <CardContent sx={{ px: { xs: 2, sm: 3 } }}>
+      <CardContent sx={{ px: { xs: 1, sm: 3 } }}>
         <Typography variant={{ xs: "h5", sm: "h4" }} gutterBottom fontWeight={700} sx={{ textAlign: 'center' }}>
           Emoji Memory Game
         </Typography>

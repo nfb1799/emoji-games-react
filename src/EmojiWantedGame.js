@@ -12,10 +12,10 @@ const EMOJIS = ["😀", "🐶", "🍕", "⚽", "🚗", "🌵", "🎩", "🍦", "
 const getGameDimensions = () => {
   const isMobile = window.innerWidth < 600;
   return {
-    width: isMobile ? Math.min(350, window.innerWidth - 40) : 500,
-    height: isMobile ? 250 : 300,
-    emojiSize: isMobile ? 36 : 48,
-    fontSize: isMobile ? 32 : 40,
+    width: isMobile ? Math.min(320, window.innerWidth - 60) : 500,
+    height: isMobile ? 220 : 300,
+    emojiSize: isMobile ? 32 : 48,
+    fontSize: isMobile ? 28 : 40,
   };
 };
 
@@ -185,15 +185,15 @@ function EmojiWantedGame() {
 
   return (
     <Card sx={{ 
-      minWidth: 320, 
-      maxWidth: 700, 
-      mx: 'auto', 
+      minWidth: 280, 
+      maxWidth: { xs: 'calc(100vw - 16px)', sm: 700 }, 
+      mx: { xs: 1, sm: 'auto' }, 
       mb: 1, 
       borderRadius: 4, 
       boxShadow: 6,
-      mx: { xs: 1, sm: 'auto' }
+      width: '100%'
     }}>
-      <CardContent sx={{ pb: 2, px: { xs: 2, sm: 3 } }}>
+      <CardContent sx={{ pb: 2, px: { xs: 1, sm: 3 } }}>
         <Typography variant={{ xs: "h5", sm: "h4" }} gutterBottom fontWeight={700}>
           Emoji Wanted!
         </Typography>

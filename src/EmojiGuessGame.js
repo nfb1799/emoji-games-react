@@ -76,9 +76,9 @@ function EmojiGuessGame() {
       borderRadius: 4, 
       boxShadow: 6,
       mx: { xs: 1, sm: 'auto' },
-      maxWidth: { xs: '100%', sm: 600 }
+      maxWidth: { xs: 'calc(100vw - 16px)', sm: 600 }
     }}>
-      <CardContent sx={{ px: { xs: 2, sm: 3 } }}>
+      <CardContent sx={{ px: { xs: 1, sm: 3 } }}>
         <Typography variant={{ xs: "h5", sm: "h4" }} gutterBottom fontWeight={700} sx={{ textAlign: 'center' }}>
           Guess the Popular Character!
         </Typography>
@@ -114,7 +114,7 @@ function EmojiGuessGame() {
                     padding: '8px 16px',
                     borderRadius: '8px',
                     border: '1px solid #ccc',
-                    width: '220px',
+                    width: window.innerWidth < 600 ? '180px' : '220px',
                     outline: 'none',
                   }}
                 />
