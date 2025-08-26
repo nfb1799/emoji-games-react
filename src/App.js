@@ -15,8 +15,8 @@ function App() {
 
   return (
     <div className="App">
-      <Box sx={{ pt: 4, pb: 2 }}>
-        <Typography variant="h3" gutterBottom>
+      <Box sx={{ pt: { xs: 2, sm: 4 }, pb: 2 }}>
+        <Typography variant={{ xs: "h4", sm: "h3" }} gutterBottom sx={{ textAlign: 'center' }}>
           Emoji Games 🎮
         </Typography>
       </Box>
@@ -37,8 +37,8 @@ function App() {
                 bgcolor: 'white',
                 borderRadius: 3,
                 boxShadow: 3,
-                width: 220,
-                height: 180,
+                width: { xs: 180, sm: 220 },
+                height: { xs: 150, sm: 180 },
                 m: 1,
                 display: 'flex',
                 flexDirection: 'column',
@@ -50,11 +50,11 @@ function App() {
               }}
               onClick={() => setSelectedGame('guess')}
             >
-              <span style={{ fontSize: 48, marginBottom: 8 }}>🤔</span>
-              <Typography variant="h6" fontWeight={700} mb={0.5}>
+              <span style={{ fontSize: window.innerWidth < 600 ? 36 : 48, marginBottom: 8 }}>🤔</span>
+              <Typography variant={{ xs: "subtitle1", sm: "h6" }} fontWeight={700} mb={0.5}>
                 Guess Game
               </Typography>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' }, textAlign: 'center' }}>
                 Guess the character from emojis!
               </Typography>
             </Box>
@@ -64,8 +64,8 @@ function App() {
                 bgcolor: 'white',
                 borderRadius: 3,
                 boxShadow: 3,
-                width: 220,
-                height: 180,
+                width: { xs: 180, sm: 220 },
+                height: { xs: 150, sm: 180 },
                 m: 1,
                 display: 'flex',
                 flexDirection: 'column',
@@ -77,11 +77,11 @@ function App() {
               }}
               onClick={() => setSelectedGame('memory')}
             >
-              <span style={{ fontSize: 48, marginBottom: 8 }}>🧠</span>
-              <Typography variant="h6" fontWeight={700} mb={0.5}>
+              <span style={{ fontSize: window.innerWidth < 600 ? 36 : 48, marginBottom: 8 }}>🧠</span>
+              <Typography variant={{ xs: "subtitle1", sm: "h6" }} fontWeight={700} mb={0.5}>
                 Memory Game
               </Typography>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' }, textAlign: 'center' }}>
                 Match emoji pairs!
               </Typography>
             </Box>
@@ -91,8 +91,8 @@ function App() {
                 bgcolor: 'white',
                 borderRadius: 3,
                 boxShadow: 3,
-                width: 220,
-                height: 180,
+                width: { xs: 180, sm: 220 },
+                height: { xs: 150, sm: 180 },
                 m: 1,
                 display: 'flex',
                 flexDirection: 'column',
@@ -104,11 +104,11 @@ function App() {
               }}
               onClick={() => setSelectedGame('wanted')}
             >
-              <span style={{ fontSize: 48, marginBottom: 8 }}>🎯</span>
-              <Typography variant="h6" fontWeight={700} mb={0.5}>
+              <span style={{ fontSize: window.innerWidth < 600 ? 36 : 48, marginBottom: 8 }}>🎯</span>
+              <Typography variant={{ xs: "subtitle1", sm: "h6" }} fontWeight={700} mb={0.5}>
                 Wanted!
               </Typography>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' }, textAlign: 'center' }}>
                 Find the target emoji!
               </Typography>
             </Box>
@@ -118,8 +118,8 @@ function App() {
                 bgcolor: 'white',
                 borderRadius: 3,
                 boxShadow: 3,
-                width: 220,
-                height: 180,
+                width: { xs: 180, sm: 220 },
+                height: { xs: 150, sm: 180 },
                 m: 1,
                 display: 'flex',
                 flexDirection: 'column',
@@ -131,11 +131,11 @@ function App() {
               }}
               onClick={() => setSelectedGame('sort')}
             >
-              <span style={{ fontSize: 48, marginBottom: 8 }}>🗂️</span>
-              <Typography variant="h6" fontWeight={700} mb={0.5}>
+              <span style={{ fontSize: window.innerWidth < 600 ? 36 : 48, marginBottom: 8 }}>🗂️</span>
+              <Typography variant={{ xs: "subtitle1", sm: "h6" }} fontWeight={700} mb={0.5}>
                 Emoji Sort
               </Typography>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' }, textAlign: 'center' }}>
                 Sort emojis into categories!
               </Typography>
             </Box>

@@ -100,21 +100,28 @@ function EmojiMemoryGame() {
   const allMatched = matchedCount === EMOJIS.length;
 
   return (
-    <Card sx={{ minWidth: 275, mb: 2, borderRadius: 4, boxShadow: 6 }}>
-      <CardContent>
-        <Typography variant="h4" gutterBottom fontWeight={700}>
+    <Card sx={{ 
+      minWidth: 275, 
+      mb: 2, 
+      borderRadius: 4, 
+      boxShadow: 6,
+      mx: { xs: 1, sm: 'auto' },
+      maxWidth: { xs: '100%', sm: 600 }
+    }}>
+      <CardContent sx={{ px: { xs: 2, sm: 3 } }}>
+        <Typography variant={{ xs: "h5", sm: "h4" }} gutterBottom fontWeight={700} sx={{ textAlign: 'center' }}>
           Emoji Memory Game
         </Typography>
-        <Typography variant="body1" gutterBottom>
+        <Typography variant="body1" gutterBottom sx={{ textAlign: 'center', fontSize: { xs: '0.9rem', sm: '1rem' } }}>
           Match all the pairs!
         </Typography>
         <Box sx={{ mt: 2, mb: 2 }}>
           <Grid
             container
-            spacing={2}
+            spacing={{ xs: 1, sm: 2 }}
             justifyContent="center"
             sx={{
-              maxWidth: 320,
+              maxWidth: { xs: 280, sm: 320 },
               margin: "0 auto",
               gridTemplateColumns: "repeat(4, 1fr)",
               display: "grid",
@@ -135,9 +142,9 @@ function EmojiMemoryGame() {
                 <Button
                   variant="outlined"
                   sx={{
-                    width: 60,
-                    height: 60,
-                    fontSize: 32,
+                    width: { xs: 50, sm: 60 },
+                    height: { xs: 50, sm: 60 },
+                    fontSize: { xs: 24, sm: 32 },
                     background: card.flipped || card.matched ? "#fff" : "#1976d2",
                     color: card.flipped || card.matched ? "#000" : "#fff",
                     border: card.matched ? "2px solid #4caf50" : undefined,

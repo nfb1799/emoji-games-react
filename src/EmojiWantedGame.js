@@ -7,9 +7,18 @@ import CardContent from '@mui/material/CardContent';
 import LinearProgress from '@mui/material/LinearProgress';
 
 const EMOJIS = ["😀", "🐶", "🍕", "⚽", "🚗", "🌵", "🎩", "🍦", "🐱", "👾", "🦄", "🐸", "🍔", "🍉", "🚀", "🎲"];
-const GAME_WIDTH = 500;
-const GAME_HEIGHT = 300;
-const EMOJI_SIZE = 48; // px
+
+// Responsive game dimensions
+const getGameDimensions = () => {
+  const isMobile = window.innerWidth < 600;
+  return {
+    width: isMobile ? Math.min(350, window.innerWidth - 40) : 500,
+    height: isMobile ? 250 : 300,
+    emojiSize: isMobile ? 36 : 48,
+    fontSize: isMobile ? 32 : 40,
+  };
+};
+
 const INITIAL_TIME = 5000; // ms (5 seconds)
 const TIME_INCREASE = 500; // ms per round
 
@@ -21,10 +30,10 @@ function getRandomEmoji(exclude) {
   return emoji;
 }
 
-function getRandomPosition() {
+function getRandomPosition(gameWidth, gameHeight, emojiSize) {
   return {
-    x: Math.random() * (GAME_WIDTH - EMOJI_SIZE),
-    y: Math.random() * (GAME_HEIGHT - EMOJI_SIZE),
+    x: Math.random() * (gameWidth - emojiSize),
+    y: Math.random() * (gameHeight - emojiSize),
   };
 }
 
@@ -46,6 +55,16 @@ function EmojiWantedGame() {
   const [loseReason, setLoseReason] = useState(''); // 'timeout' or 'wrong'
   const [timeLeft, setTimeLeft] = useState(INITIAL_TIME);
   const [currentTime, setCurrentTime] = useState(INITIAL_TIME);
+  const [gameDimensions, setGameDimensions] = useState(getGameDimensions);
+
+  // Update dimensions on window resize
+  useEffect(() => {
+    const handleResize = () => {
+      setGameDimensions(getGameDimensions());
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // ...existing code...
 
@@ -62,7 +81,7 @@ function EmojiWantedGame() {
     const emojiObjs = [];
     for (let i = 0; i < numEmojis; i++) {
       let emoji = i === wantedIndex ? wantedEmoji : getRandomEmoji(wantedEmoji);
-      let pos = getRandomPosition();
+      let pos = getRandomPosition(gameDimensions.width, gameDimensions.height, gameDimensions.emojiSize);
       let vel = getRandomVelocity();
       emojiObjs.push({
         emoji,
@@ -90,10 +109,10 @@ function EmojiWantedGame() {
           let ny = e.y + e.dy;
           let ndx = e.dx;
           let ndy = e.dy;
-          if (nx < 0 || nx > GAME_WIDTH - EMOJI_SIZE) ndx = -ndx;
-          if (ny < 0 || ny > GAME_HEIGHT - EMOJI_SIZE) ndy = -ndy;
-          nx = Math.max(0, Math.min(nx, GAME_WIDTH - EMOJI_SIZE));
-          ny = Math.max(0, Math.min(ny, GAME_HEIGHT - EMOJI_SIZE));
+          if (nx < 0 || nx > gameDimensions.width - gameDimensions.emojiSize) ndx = -ndx;
+          if (ny < 0 || ny > gameDimensions.height - gameDimensions.emojiSize) ndy = -ndy;
+          nx = Math.max(0, Math.min(nx, gameDimensions.width - gameDimensions.emojiSize));
+          ny = Math.max(0, Math.min(ny, gameDimensions.height - gameDimensions.emojiSize));
           return { ...e, x: nx, y: ny, dx: ndx, dy: ndy };
         })
       );
@@ -101,7 +120,7 @@ function EmojiWantedGame() {
     };
     frame = requestAnimationFrame(move);
     return () => cancelAnimationFrame(frame);
-  }, [gameState]);
+  }, [gameState, gameDimensions]);
 
   // Timer for each round (update timeLeft smoothly)
   useEffect(() => {
@@ -165,12 +184,20 @@ function EmojiWantedGame() {
   };
 
   return (
-    <Card sx={{ minWidth: 340, maxWidth: 700, mx: 'auto', mb: 1, borderRadius: 4, boxShadow: 6 }}>
-      <CardContent sx={{ pb: 2 }}>
-        <Typography variant="h4" gutterBottom fontWeight={700}>
+    <Card sx={{ 
+      minWidth: 320, 
+      maxWidth: 700, 
+      mx: 'auto', 
+      mb: 1, 
+      borderRadius: 4, 
+      boxShadow: 6,
+      mx: { xs: 1, sm: 'auto' }
+    }}>
+      <CardContent sx={{ pb: 2, px: { xs: 2, sm: 3 } }}>
+        <Typography variant={{ xs: "h5", sm: "h4" }} gutterBottom fontWeight={700}>
           Emoji Wanted!
         </Typography>
-        <Typography variant="body1" gutterBottom>
+        <Typography variant="body1" gutterBottom sx={{ fontSize: { xs: '0.9rem', sm: '1rem' } }}>
           Find and click the wanted emoji before time runs out!
         </Typography>
         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 1 }}>
@@ -178,22 +205,22 @@ function EmojiWantedGame() {
             sx={{
               background: '#fff',
               borderRadius: 2,
-              px: 3,
+              px: { xs: 2, sm: 3 },
               py: 1,
               boxShadow: 1,
               border: '1px solid #1976d2',
               display: 'inline-flex',
               alignItems: 'center',
-              gap: 2,
+              gap: { xs: 1, sm: 2 },
               minWidth: 120,
               maxWidth: '100%',
             }}
           >
-            <Typography variant="body1" sx={{ mr: 1 }}>
+            <Typography variant="body1" sx={{ mr: 1, fontSize: { xs: '0.8rem', sm: '1rem' } }}>
               Wanted:
             </Typography>
-            <span style={{ fontSize: 40 }}>{wanted}</span>
-            <Typography variant="body1" sx={{ ml: 2 }}>
+            <span style={{ fontSize: gameDimensions.fontSize }}>{wanted}</span>
+            <Typography variant="body1" sx={{ ml: { xs: 1, sm: 2 }, fontSize: { xs: '0.8rem', sm: '1rem' } }}>
               <strong>Round:</strong> {round}
             </Typography>
           </Box>
@@ -215,8 +242,8 @@ function EmojiWantedGame() {
         <Box
           sx={{
             width: '100%',
-            maxWidth: GAME_WIDTH,
-            height: GAME_HEIGHT,
+            maxWidth: gameDimensions.width,
+            height: gameDimensions.height,
             position: 'relative',
             background: '#e3f2fd',
             borderRadius: 3,
@@ -234,11 +261,11 @@ function EmojiWantedGame() {
                 position: 'absolute',
                 left: e.x,
                 top: e.y,
-                width: EMOJI_SIZE,
-                height: EMOJI_SIZE,
+                width: gameDimensions.emojiSize,
+                height: gameDimensions.emojiSize,
                 cursor: 'pointer',
                 userSelect: 'none',
-                fontSize: 40,
+                fontSize: gameDimensions.fontSize,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',

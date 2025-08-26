@@ -70,30 +70,39 @@ function EmojiGuessGame() {
   const { emojis, answer } = shuffledPuzzles[current] || {};
 
   return (
-    <Card sx={{ minWidth: 275, mb: 2, borderRadius: 4, boxShadow: 6 }}>
-      <CardContent>
-        <Typography variant="h4" gutterBottom fontWeight={700}>
+    <Card sx={{ 
+      minWidth: 275, 
+      mb: 2, 
+      borderRadius: 4, 
+      boxShadow: 6,
+      mx: { xs: 1, sm: 'auto' },
+      maxWidth: { xs: '100%', sm: 600 }
+    }}>
+      <CardContent sx={{ px: { xs: 2, sm: 3 } }}>
+        <Typography variant={{ xs: "h5", sm: "h4" }} gutterBottom fontWeight={700} sx={{ textAlign: 'center' }}>
           Guess the Popular Character!
         </Typography>
         {completed ? (
           <>
-            <Typography variant="h2" color="success.main" sx={{ mt: 2, mb: 2 }}>
+            <Typography variant={{ xs: "h4", sm: "h2" }} color="success.main" sx={{ mt: 2, mb: 2, textAlign: 'center' }}>
               🎉 Victory! You completed all puzzles! 🎉
             </Typography>
-            <Typography variant="body1" sx={{ mb: 2 }}>
+            <Typography variant="body1" sx={{ mb: 2, textAlign: 'center' }}>
               Final Score: {score} / {shuffledPuzzles.length}
             </Typography>
-            <Button variant="contained" color="primary" onClick={handleRestart}>
-              Play Again
-            </Button>
+            <Box sx={{ textAlign: 'center' }}>
+              <Button variant="contained" color="primary" onClick={handleRestart}>
+                Play Again
+              </Button>
+            </Box>
           </>
         ) : (
           <>
-            <Typography variant="h1" gutterBottom>
+            <Typography variant={{ xs: "h2", sm: "h1" }} gutterBottom sx={{ textAlign: 'center', fontSize: { xs: '3rem', sm: '6rem' } }}>
               {emojis}
             </Typography>
             <form onSubmit={handleSubmit} autoComplete="off">
-              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 2, mb: 2 }}>
+              <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, justifyContent: 'center', alignItems: 'center', gap: 2, mb: 2 }}>
                 <input
                   type="text"
                   value={guess}
