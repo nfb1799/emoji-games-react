@@ -7,12 +7,11 @@ import CardContent from '@mui/material/CardContent';
 import LinearProgress from '@mui/material/LinearProgress';
 
 const EMOJIS = ["😀", "🐶", "🍕", "⚽", "🚗", "🌵", "🎩", "🍦", "🐱", "👾", "🦄", "🐸", "🍔", "🍉", "🚀", "🎲"];
-const GAME_WIDTH = 600;
-const GAME_HEIGHT = 400;
-const EMOJI_SIZE = 64; // px
+const GAME_WIDTH = 500;
+const GAME_HEIGHT = 300;
+const EMOJI_SIZE = 48; // px
 const INITIAL_TIME = 5000; // ms (5 seconds)
 const TIME_INCREASE = 500; // ms per round
-// ...existing code...
 
 function getRandomEmoji(exclude) {
   let emoji;
@@ -166,15 +165,15 @@ function EmojiWantedGame() {
   };
 
   return (
-    <Card sx={{ minWidth: 340, maxWidth: 700, mx: 'auto', mb: 2, borderRadius: 4, boxShadow: 6 }}>
-      <CardContent>
+    <Card sx={{ minWidth: 340, maxWidth: 700, mx: 'auto', mb: 1, borderRadius: 4, boxShadow: 6 }}>
+      <CardContent sx={{ pb: 2 }}>
         <Typography variant="h4" gutterBottom fontWeight={700}>
           Emoji Wanted!
         </Typography>
         <Typography variant="body1" gutterBottom>
           Find and click the wanted emoji before time runs out!
         </Typography>
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 2 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 1 }}>
           <Box
             sx={{
               background: '#fff',
@@ -200,7 +199,7 @@ function EmojiWantedGame() {
           </Box>
         </Box>
         {/* Time bar - always reserve space to prevent shifting and avoid flicker between rounds */}
-        <Box sx={{ width: '100%', maxWidth: 420, mx: 'auto', mb: 2, minHeight: 10, display: 'flex', alignItems: 'center' }}>
+        <Box sx={{ width: '100%', maxWidth: 420, mx: 'auto', mb: 1, minHeight: 10, display: 'flex', alignItems: 'center' }}>
           <LinearProgress
             variant="determinate"
             value={
@@ -222,7 +221,7 @@ function EmojiWantedGame() {
             background: '#e3f2fd',
             borderRadius: 3,
             overflow: 'hidden',
-            mb: 2,
+            mb: 1,
             border: '2px solid #1976d2',
             mx: 'auto',
           }}
@@ -239,7 +238,7 @@ function EmojiWantedGame() {
                 height: EMOJI_SIZE,
                 cursor: 'pointer',
                 userSelect: 'none',
-                fontSize: 56,
+                fontSize: 40,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
