@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/emoji-games-react/static/css/main.1c59c513.css",
-    "main.js": "/emoji-games-react/static/js/main.29176127.js",
+    "main.css": "/emoji-games-react/static/css/main.3d7645bd.css",
+    "main.js": "/emoji-games-react/static/js/main.1cbe59b2.js",
     "static/js/453.e522b8f7.chunk.js": "/emoji-games-react/static/js/453.e522b8f7.chunk.js",
     "index.html": "/emoji-games-react/index.html",
-    "main.1c59c513.css.map": "/emoji-games-react/static/css/main.1c59c513.css.map",
-    "main.29176127.js.map": "/emoji-games-react/static/js/main.29176127.js.map",
+    "main.3d7645bd.css.map": "/emoji-games-react/static/css/main.3d7645bd.css.map",
+    "main.1cbe59b2.js.map": "/emoji-games-react/static/js/main.1cbe59b2.js.map",
     "453.e522b8f7.chunk.js.map": "/emoji-games-react/static/js/453.e522b8f7.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.1c59c513.css",
-    "static/js/main.29176127.js"
+    "static/css/main.3d7645bd.css",
+    "static/js/main.1cbe59b2.js"
   ]
 }
