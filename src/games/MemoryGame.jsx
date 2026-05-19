@@ -1,15 +1,9 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import ToggleButton from '@mui/material/ToggleButton';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import GameShell from '../components/GameShell';
 import Confetti from '../components/Confetti';
+import { INK, PAPER, ACCENT, WBox, WPill, MonoText } from '../components/WireKit';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { MEMORY_EMOJIS } from '../data/emojis';
-
-const ACCENT = '#ec4899';
 
 const DIFFICULTIES = {
   Easy: { pairs: 6, cols: 4 },
@@ -36,6 +30,13 @@ const buildDeck = (pairs) => {
   }));
 };
 
+const formatTime = (ms) => {
+  const total = Math.floor(ms / 1000);
+  const m = Math.floor(total / 60);
+  const s = total % 60;
+  return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+};
+
 export default function MemoryGame({ onBack }) {
   const [difficulty, setDifficulty] = useState('Medium');
   const { pairs, cols } = DIFFICULTIES[difficulty];
@@ -44,21 +45,50 @@ export default function MemoryGame({ onBack }) {
   const [moves, setMoves] = useState(0);
   const [matched, setMatched] = useState(0);
   const [locked, setLocked] = useState(false);
-  const [bestMoves, setBestMoves] = useLocalStorage(`eg2:mem:best:${difficulty}`, null);
+  const [bestMoves, setBestMoves] = useLocalStorage(`eg:mem:best:${difficulty}`, null);
+
+  // timer
+  const [elapsed, setElapsed] = useState(0);
+  const startRef = useRef(null);
+  const tickRef = useRef(null);
+  const startedRef = useRef(false);
 
   const allMatched = matched === pairs;
 
+  const stopTimer = useCallback(() => {
+    if (tickRef.current) {
+      cancelAnimationFrame(tickRef.current);
+      tickRef.current = null;
+    }
+  }, []);
+
+  const startTimer = useCallback(() => {
+    if (startedRef.current) return;
+    startedRef.current = true;
+    startRef.current = Date.now();
+    const tick = () => {
+      setElapsed(Date.now() - startRef.current);
+      tickRef.current = requestAnimationFrame(tick);
+    };
+    tickRef.current = requestAnimationFrame(tick);
+  }, []);
+
   const restart = useCallback(() => {
+    stopTimer();
+    startedRef.current = false;
+    setElapsed(0);
     setCards(buildDeck(pairs));
     setFlipped([]);
     setMoves(0);
     setMatched(0);
     setLocked(false);
-  }, [pairs]);
+  }, [pairs, stopTimer]);
 
   useEffect(() => {
     restart();
   }, [difficulty, restart]);
+
+  useEffect(() => () => stopTimer(), [stopTimer]);
 
   useEffect(() => {
     if (flipped.length !== 2) return;
@@ -69,9 +99,7 @@ export default function MemoryGame({ onBack }) {
     const timeout = setTimeout(() => {
       setCards((prev) =>
         prev.map((c, i) =>
-          i === a || i === b
-            ? { ...c, matched: isMatch, flipped: isMatch ? true : false }
-            : c
+          i === a || i === b ? { ...c, matched: isMatch, flipped: isMatch } : c
         )
       );
       if (isMatch) setMatched((m) => m + 1);
@@ -85,6 +113,7 @@ export default function MemoryGame({ onBack }) {
 
   useEffect(() => {
     if (allMatched) {
+      stopTimer();
       setBestMoves((b) => (b == null ? moves : Math.min(b, moves)));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -93,144 +122,141 @@ export default function MemoryGame({ onBack }) {
   const handleClick = (idx) => {
     if (locked) return;
     const c = cards[idx];
-    if (c.flipped || c.matched) return;
-    if (flipped.includes(idx)) return;
+    if (c.flipped || c.matched || flipped.includes(idx)) return;
+    if (!startedRef.current) startTimer();
     setCards((prev) => prev.map((card, i) => (i === idx ? { ...card, flipped: true } : card)));
     setFlipped((f) => [...f, idx]);
   };
-
-  const cardSize = useMemo(() => {
-    if (cols >= 5) return { xs: 54, sm: 70 };
-    return { xs: 62, sm: 80 };
-  }, [cols]);
 
   return (
     <>
       <Confetti active={allMatched} />
       <GameShell
-        title="Memory Match"
-        subtitle="Find every pair"
-        accent={ACCENT}
+        title="MATCH · find the pairs"
         onBack={onBack}
         onRestart={restart}
-        stats={[
-          { label: 'Moves', value: moves, color: ACCENT },
-          { label: 'Pairs', value: `${matched}/${pairs}` },
-          { label: 'Best', value: bestMoves ?? '—', color: '#10b981' },
-        ]}
+        primary={formatTime(elapsed)}
+        secondary={`${matched}/${pairs} pairs`}
       >
-        <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
-          <ToggleButtonGroup
-            value={difficulty}
-            exclusive
-            size="small"
-            onChange={(_, v) => v && setDifficulty(v)}
-            aria-label="Difficulty"
-          >
-            {Object.keys(DIFFICULTIES).map((d) => (
-              <ToggleButton key={d} value={d} sx={{ px: 2 }}>
+        <div style={{ padding: '12px 18px 4px', display: 'flex', justifyContent: 'center', gap: 8 }}>
+          {Object.keys(DIFFICULTIES).map((d) => {
+            const active = d === difficulty;
+            return (
+              <WPill
+                key={d}
+                thick={active}
+                fill={active ? ACCENT : 'transparent'}
+                style={{ color: active ? 'white' : INK, fontWeight: active ? 800 : 400, cursor: 'pointer' }}
+                onClick={() => setDifficulty(d)}
+              >
                 {d}
-              </ToggleButton>
-            ))}
-          </ToggleButtonGroup>
-        </Box>
+              </WPill>
+            );
+          })}
+        </div>
 
         {allMatched ? (
-          <Box sx={{ textAlign: 'center', py: 2 }}>
-            <Typography variant="h2" sx={{ animation: 'popIn 0.5s ease' }}>🎉</Typography>
-            <Typography variant="h5" fontWeight={800} sx={{ mt: 1 }}>
-              Solved in {moves} moves
-            </Typography>
-            <Button variant="contained" size="large" sx={{ mt: 3 }} onClick={restart}>
-              Play Again
-            </Button>
-          </Box>
+          <WinPanel moves={moves} time={formatTime(elapsed)} bestMoves={bestMoves} onRestart={restart} />
         ) : (
-          <Box
-            sx={{
+          <div
+            style={{
+              flex: 1,
+              padding: '12px 18px 16px',
               display: 'grid',
               gridTemplateColumns: `repeat(${cols}, 1fr)`,
-              gap: { xs: 1, sm: 1.25 },
-              maxWidth: 480,
-              mx: 'auto',
-              perspective: '800px',
+              gap: 10,
+              maxWidth: 520,
+              margin: '0 auto',
+              width: '100%',
             }}
           >
             {cards.map((c, idx) => {
               const showFace = c.flipped || c.matched;
+              const tilt = ((idx % 3) - 1) * 0.4;
               return (
-                <Box
+                <button
                   key={c.id}
-                  role="button"
-                  aria-label={showFace ? c.emoji : 'Hidden card'}
                   onClick={() => handleClick(idx)}
-                  sx={{
-                    position: 'relative',
-                    width: '100%',
+                  aria-label={showFace ? c.emoji : 'Hidden card'}
+                  style={{
                     aspectRatio: '1 / 1',
-                    minHeight: cardSize,
+                    border: `2px solid ${INK}`,
+                    borderRadius: 10,
+                    background: c.matched ? ACCENT : showFace ? PAPER : `${INK}10`,
+                    color: INK,
+                    fontSize: 28,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
                     cursor: showFace ? 'default' : 'pointer',
-                    transformStyle: 'preserve-3d',
-                    transition: 'transform 0.45s cubic-bezier(0.4, 0.2, 0.2, 1)',
-                    transform: showFace ? 'rotateY(180deg)' : 'rotateY(0)',
-                    outline: 'none',
-                    '&:focus-visible > *': { boxShadow: `0 0 0 3px ${ACCENT}55` },
-                  }}
-                  tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      handleClick(idx);
-                    }
+                    transform: `rotate(${tilt}deg)`,
+                    boxShadow: c.matched ? `0 3px 0 ${INK}` : `0 4px 0 ${INK}`,
+                    transition: 'transform 0.12s ease, box-shadow 0.12s ease, background 0.2s ease',
+                    opacity: c.matched ? 0.92 : 1,
+                    animation: 'fadeInUp 0.35s ease both',
+                    fontFamily: 'inherit',
                   }}
                 >
-                  {/* Back */}
-                  <Box
-                    sx={{
-                      position: 'absolute',
-                      inset: 0,
-                      borderRadius: 2.5,
-                      background: `linear-gradient(135deg, ${ACCENT}, #f472b6)`,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: '#fff',
-                      fontWeight: 800,
-                      fontSize: { xs: 22, sm: 28 },
-                      backfaceVisibility: 'hidden',
-                      boxShadow: '0 4px 12px rgba(236, 72, 153, 0.35)',
-                    }}
-                  >
-                    ?
-                  </Box>
-                  {/* Face */}
-                  <Box
-                    sx={{
-                      position: 'absolute',
-                      inset: 0,
-                      borderRadius: 2.5,
-                      background: (t) => (t.palette.mode === 'dark' ? '#0f172a' : '#fff'),
-                      border: (t) =>
-                        c.matched
-                          ? `2px solid ${t.palette.success.main}`
-                          : `2px solid ${t.palette.mode === 'dark' ? '#334155' : '#e2e8f0'}`,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontSize: { xs: 28, sm: 36 },
-                      transform: 'rotateY(180deg)',
-                      backfaceVisibility: 'hidden',
-                      boxShadow: c.matched ? '0 0 16px rgba(16,185,129,0.35)' : '0 4px 8px rgba(15,23,42,0.06)',
-                    }}
-                  >
-                    {c.emoji}
-                  </Box>
-                </Box>
+                  {showFace ? (
+                    <span style={{ animation: c.flipped ? 'popIn 0.3s ease' : undefined }}>{c.emoji}</span>
+                  ) : (
+                    <span style={{ fontFamily: 'var(--mono)', fontSize: 18, opacity: 0.45 }}>?</span>
+                  )}
+                </button>
               );
             })}
-          </Box>
+          </div>
         )}
+
+        <div
+          style={{
+            padding: '8px 18px 14px',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            borderTop: `1.2px dashed ${INK}`,
+          }}
+        >
+          <MonoText style={{ fontSize: 11, opacity: 0.7 }}>MOVES: {moves}</MonoText>
+          <MonoText style={{ fontSize: 11, opacity: 0.7 }}>
+            BEST: {bestMoves != null ? `${bestMoves} moves` : '—'}
+          </MonoText>
+        </div>
       </GameShell>
     </>
+  );
+}
+
+function WinPanel({ moves, time, bestMoves, onRestart }) {
+  return (
+    <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
+      <WBox thick style={{ padding: 24, textAlign: 'center', maxWidth: 360, transform: 'rotate(-0.6deg)', background: PAPER, boxShadow: `0 6px 0 ${INK}` }}>
+        <div style={{ fontSize: 56, animation: 'popIn 0.45s ease' }}>🏆</div>
+        <MonoText style={{ fontSize: 11, letterSpacing: 3, opacity: 0.7 }}>★ CLEARED ★</MonoText>
+        <div style={{ fontSize: 28, fontWeight: 900, margin: '6px 0', letterSpacing: -0.5 }}>
+          {time} · {moves} moves
+        </div>
+        <div style={{ fontSize: 13, opacity: 0.7, marginBottom: 18 }}>
+          {bestMoves != null && bestMoves === moves ? 'new best!' : bestMoves != null ? `best: ${bestMoves} moves` : 'first run logged'}
+        </div>
+        <button
+          onClick={onRestart}
+          style={{
+            border: `2px solid ${INK}`,
+            background: ACCENT,
+            color: 'white',
+            padding: '10px 22px',
+            fontSize: 14,
+            fontWeight: 800,
+            letterSpacing: 1,
+            borderRadius: 8,
+            boxShadow: `0 4px 0 ${INK}`,
+            fontFamily: 'inherit',
+          }}
+        >
+          PLAY AGAIN ▶
+        </button>
+      </WBox>
+    </div>
   );
 }

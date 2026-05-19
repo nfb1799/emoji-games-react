@@ -1,42 +1,49 @@
-# Emoji Games v2
+# Emoji Games
 
-A redesigned collection of fast, casual emoji mini-games. Same four games as v1, rebuilt with a cleaner component structure, a real MUI theme (light/dark), persistent best scores, and improved mobile UX.
+A collection of fast, casual emoji mini-games with an arcade / hand-drawn aesthetic.
 
 ## Games
-- **Memory Match** — flip cards, find pairs (Easy / Medium / Hard)
-- **Find the Wanted** — spot the target emoji before time runs out
+- **Match** — flip cards, find every pair (Easy / Medium / Hard)
+- **Wanted** — spot the target emoji as rounds get faster
 
 ## Run
 ```bash
 npm install
 npm run dev
 ```
-Dev server starts in well under a second (Vite).
+Dev server starts in under a second (Vite).
 
 ## Build / deploy
 ```bash
 npm run build      # outputs to dist/
 npm run preview    # preview the production build locally
-npm run deploy     # gh-pages -d dist
+npm run deploy     # publishes dist/ to the gh-pages branch
 ```
 
 ## Structure
 ```
 src/
-  App.js              # home + theme + routing
-  theme.js            # light/dark MUI themes
-  components/         # GameShell, GameCard, Confetti
-  games/              # GuessGame, MemoryGame, WantedGame, SortGame
-  hooks/              # useLocalStorage, useWindowSize
-  data/               # puzzles + emoji categories
+  App.jsx             # arcade home (mobile + desktop variants) and routing
+  index.jsx           # React entry
+  index.css           # tokens (paper, ink, accent) + animations
+  components/
+    WireKit.jsx       # WBox, WPill, MonoText primitives (paper/ink/accent)
+    GameShell.jsx     # exit pill · mono timer · accent score pill
+    Confetti.jsx
+  games/
+    MemoryGame.jsx
+    WantedGame.jsx
+  hooks/
+    useLocalStorage.js
+    useWindowSize.js
+  data/
+    emojis.js
 ```
 
-## Improvements over v1
-- Proper `ThemeProvider` with dark mode toggle (persisted)
-- Best scores stored in localStorage per game
-- Bug fixes: removed broken `variant={{ xs, sm }}` props, replaced direct `window.innerWidth` reads with a `useWindowSize` hook, fixed Memory's effect re-running unnecessarily
-- 3D flip animation on memory cards
-- Confetti on big wins
-- Difficulty selector for Memory
-- Keyboard support (Enter/Space) on home cards and emoji picks
-- Modular files instead of one mega `App.js`
+## Design system
+- **Palette:** paper `#faf6ee` on `#efe9dc` background, ink `#1f1d1a`, accent `#ff6b3d`
+- **Fonts:** Kalam (handwritten) for body, JetBrains Mono for stats/timers, Inter as neutral fallback
+- **Surfaces:** 2-2.5 px ink borders, 3D bottom shadow (`0 5px 0 ink`), slight rotations (±0.6°) for a hand-drawn feel
+- **Background:** tiny ink dot grid (16 px spacing) on warm off-white
+
+No CSS framework or UI library — everything is plain styled divs with CSS variables.

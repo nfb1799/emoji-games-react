@@ -1,9 +1,8 @@
-import React, { useMemo } from 'react';
-import Box from '@mui/material/Box';
+import { useMemo } from 'react';
 
-const COLORS = ['#6366f1', '#ec4899', '#10b981', '#f59e0b', '#06b6d4', '#f43f5e'];
+const COLORS = ['#ff6b3d', '#1f1d1a', '#3d8bff', '#16a34a', '#e84a8a'];
 
-export default function Confetti({ active, count = 60 }) {
+export default function Confetti({ active, count = 50 }) {
   const pieces = useMemo(
     () =>
       Array.from({ length: count }).map((_, i) => ({
@@ -20,9 +19,9 @@ export default function Confetti({ active, count = 60 }) {
   if (!active) return null;
 
   return (
-    <Box
+    <div
       aria-hidden
-      sx={{
+      style={{
         position: 'fixed',
         inset: 0,
         pointerEvents: 'none',
@@ -31,9 +30,9 @@ export default function Confetti({ active, count = 60 }) {
       }}
     >
       {pieces.map((p) => (
-        <Box
+        <span
           key={p.id}
-          sx={{
+          style={{
             position: 'absolute',
             top: 0,
             left: `${p.left}%`,
@@ -45,6 +44,6 @@ export default function Confetti({ active, count = 60 }) {
           }}
         />
       ))}
-    </Box>
+    </div>
   );
 }

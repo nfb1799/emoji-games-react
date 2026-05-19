@@ -1,7 +1,7 @@
 {
   "name": "emoji-games-react",
   "private": true,
-  "version": "0.2.0",
+  "version": "0.3.0",
   "type": "module",
   "homepage": "https://nfb1799.github.io/emoji-games-react",
   "scripts": {
@@ -13,10 +13,6 @@
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
-    "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.14.1",
-    "@mui/icons-material": "^7.2.0",
-    "@mui/material": "^7.2.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },
