@@ -1,6 +1,7 @@
 export const INK = '#1f1d1a';
 export const PAPER = '#faf6ee';
-export const ACCENT = '#ff6b3d';
+export const ACCENT = 'var(--accent)';
+export const ACCENT_SOFT = 'color-mix(in srgb, var(--accent) 13%, transparent)';
 export const MUTE = '#cdc7b8';
 
 export function WBox({ children, style, tilt = 0, dashed = false, thick = false, fill, ...rest }) {

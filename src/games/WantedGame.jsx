@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import GameShell from '../components/GameShell';
 import Confetti from '../components/Confetti';
-import { INK, PAPER, ACCENT, WBox, WPill, MonoText } from '../components/WireKit';
+import { INK, PAPER, ACCENT, ACCENT_SOFT, WBox, WPill, MonoText } from '../components/WireKit';
 import useLocalStorage from '../hooks/useLocalStorage';
 import useWindowSize from '../hooks/useWindowSize';
 import { WANTED_EMOJIS } from '../data/emojis';
@@ -227,7 +227,7 @@ export default function WantedGame({ onBack }) {
                   fontSize: dims.emojiSize * 0.85,
                   border: state === 'win' && e.isWanted ? `2px solid ${ACCENT}` : '1px solid transparent',
                   borderRadius: '50%',
-                  background: state === 'win' && e.isWanted ? `${ACCENT}22` : 'transparent',
+                  background: state === 'win' && e.isWanted ? ACCENT_SOFT : 'transparent',
                   cursor: 'pointer',
                   userSelect: 'none',
                   transform: `rotate(${e.rot}deg)`,
