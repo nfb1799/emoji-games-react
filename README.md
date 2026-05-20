@@ -5,6 +5,8 @@ A collection of fast, casual emoji mini-games with an arcade / hand-drawn aesthe
 ## Games
 - **Match** — flip cards, find every pair (Easy / Medium / Hard)
 - **Wanted** — spot the target emoji as rounds get faster
+- **Echo** — Simon-says with emoji pads; repeat the growing sequence
+- **Dodge** — slide / arrow-key your way around falling hazards; longest survival wins
 
 ## Run
 ```bash
@@ -33,9 +35,12 @@ src/
   games/
     MemoryGame.jsx
     WantedGame.jsx
+    EchoGame.jsx
+    DodgeGame.jsx
   hooks/
     useLocalStorage.js
     useWindowSize.js
+    useAccent.js
   data/
     emojis.js
 ```

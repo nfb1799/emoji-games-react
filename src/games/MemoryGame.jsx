@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import GameShell from '../components/GameShell';
 import Confetti from '../components/Confetti';
-import { INK, PAPER, ACCENT, WBox, WPill, MonoText } from '../components/WireKit';
+import { INK, PAPER, ACCENT, WPill, MonoText } from '../components/WireKit';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { MEMORY_EMOJIS } from '../data/emojis';
 
@@ -155,9 +155,7 @@ export default function MemoryGame({ onBack }) {
           })}
         </div>
 
-        {allMatched ? (
-          <WinPanel moves={moves} time={formatTime(elapsed)} bestMoves={bestMoves} onRestart={restart} />
-        ) : (
+        <div style={{ position: 'relative', flex: 1, display: 'flex', flexDirection: 'column' }}>
           <div
             style={{
               flex: 1,
@@ -206,7 +204,17 @@ export default function MemoryGame({ onBack }) {
               );
             })}
           </div>
-        )}
+
+          {allMatched && (
+            <WinOverlay
+              moves={moves}
+              time={formatTime(elapsed)}
+              bestMoves={bestMoves}
+              onRestart={restart}
+              onBack={onBack}
+            />
+          )}
+        </div>
 
         <div
           style={{
@@ -227,36 +235,70 @@ export default function MemoryGame({ onBack }) {
   );
 }
 
-function WinPanel({ moves, time, bestMoves, onRestart }) {
+function WinOverlay({ moves, time, bestMoves, onRestart, onBack }) {
   return (
-    <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
-      <WBox thick style={{ padding: 24, textAlign: 'center', maxWidth: 360, transform: 'rotate(-0.6deg)', background: PAPER, boxShadow: `0 6px 0 ${INK}` }}>
-        <div style={{ fontSize: 56, animation: 'popIn 0.45s ease' }}>🏆</div>
-        <MonoText style={{ fontSize: 11, letterSpacing: 3, opacity: 0.7 }}>★ CLEARED ★</MonoText>
-        <div style={{ fontSize: 28, fontWeight: 900, margin: '6px 0', letterSpacing: -0.5 }}>
-          {time} · {moves} moves
-        </div>
-        <div style={{ fontSize: 13, opacity: 0.7, marginBottom: 18 }}>
-          {bestMoves != null && bestMoves === moves ? 'new best!' : bestMoves != null ? `best: ${bestMoves} moves` : 'first run logged'}
-        </div>
-        <button
-          onClick={onRestart}
-          style={{
-            border: `2px solid ${INK}`,
-            background: ACCENT,
-            color: 'white',
-            padding: '10px 22px',
-            fontSize: 14,
-            fontWeight: 800,
-            letterSpacing: 1,
-            borderRadius: 8,
-            boxShadow: `0 4px 0 ${INK}`,
-            fontFamily: 'inherit',
-          }}
-        >
-          PLAY AGAIN ▶
-        </button>
-      </WBox>
+    <div
+      style={{
+        position: 'absolute',
+        inset: 0,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 12,
+        padding: 24,
+        textAlign: 'center',
+        background: 'rgba(250, 246, 238, 0.92)',
+        backdropFilter: 'blur(4px)',
+        zIndex: 5,
+        animation: 'fadeInUp 0.3s ease both',
+      }}
+    >
+      <MonoText style={{ fontSize: 11, letterSpacing: 3, opacity: 0.7 }}>◆ ARCADE ◆</MonoText>
+      <div style={{ fontSize: 56, lineHeight: 1, animation: 'popIn 0.45s ease' }}>🏆</div>
+      <div style={{ fontSize: 30, fontWeight: 900, letterSpacing: -0.5 }}>CLEARED</div>
+      <div style={{ fontSize: 16, fontWeight: 700 }}>
+        {time} · {moves} moves
+      </div>
+      <div style={{ fontSize: 13, opacity: 0.7, maxWidth: 280 }}>
+        {bestMoves != null && bestMoves === moves
+          ? 'new best!'
+          : bestMoves != null
+          ? `best: ${bestMoves} moves`
+          : 'first run logged'}
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, marginTop: 4 }}>
+        <button onClick={onRestart} style={primaryBtnStyle}>PLAY AGAIN ▶</button>
+        <button onClick={onBack} style={secondaryBtnStyle}>‹ all games</button>
+      </div>
     </div>
   );
 }
+
+const primaryBtnStyle = {
+  border: `2px solid ${INK}`,
+  background: ACCENT,
+  color: 'white',
+  padding: '10px 22px',
+  fontSize: 14,
+  fontWeight: 800,
+  letterSpacing: 1,
+  borderRadius: 8,
+  boxShadow: `0 4px 0 ${INK}`,
+  fontFamily: 'inherit',
+  cursor: 'pointer',
+};
+
+const secondaryBtnStyle = {
+  border: `1.5px solid ${INK}`,
+  background: 'transparent',
+  color: INK,
+  padding: '6px 16px',
+  fontSize: 12,
+  fontWeight: 600,
+  letterSpacing: 0.5,
+  borderRadius: 999,
+  fontFamily: 'inherit',
+  cursor: 'pointer',
+  opacity: 0.8,
+};

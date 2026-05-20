@@ -2,15 +2,19 @@ import { useState } from 'react';
 import { INK, PAPER, ACCENT, WBox, WPill, MonoText } from './components/WireKit';
 import MemoryGame from './games/MemoryGame';
 import WantedGame from './games/WantedGame';
+import EchoGame from './games/EchoGame';
+import DodgeGame from './games/DodgeGame';
 import useWindowSize from './hooks/useWindowSize';
 import useLocalStorage from './hooks/useLocalStorage';
 import useAccent, { DEFAULT_ACCENT } from './hooks/useAccent';
 
 const GAMES = {
-  match: { title: 'MATCH', sub: 'flip · pair · finish', emoji: '🎴', Component: MemoryGame },
-  wanted: { title: 'WANTED', sub: 'spot the suspect', emoji: '🤠', Component: WantedGame },
+  match:  { title: 'MATCH',  sub: 'flip · pair · finish',     emoji: '🎴', Component: MemoryGame },
+  wanted: { title: 'WANTED', sub: 'spot the suspect',          emoji: '🤠', Component: WantedGame },
+  echo:   { title: 'ECHO',   sub: 'repeat the sequence',       emoji: '🔁', Component: EchoGame },
+  dodge:  { title: 'DODGE',  sub: "don't get hit",             emoji: '🚧', Component: DodgeGame },
 };
-const GAME_IDS = ['match', 'wanted'];
+const GAME_IDS = ['match', 'wanted', 'echo', 'dodge'];
 
 const NAV = [
   { id: 'play', label: 'Play', icon: '🎮' },
@@ -173,15 +177,13 @@ function NavItem({ label, active, onClick }) {
 function PlayView({ featuredId, onPick, isDesktop }) {
   const [bestMatch] = useLocalStorage('eg:mem:best:Medium', null);
   const [bestWanted] = useLocalStorage('eg:wanted:best', 0);
+  const [bestEcho] = useLocalStorage('eg:echo:best', 0);
+  const [bestDodge] = useLocalStorage('eg:dodge:best', 0);
+  const COMPACT_TILTS = { match: -0.4, wanted: 0.3, echo: -0.3, dodge: 0.4 };
 
-  const slots = [
-    { kind: 'game', id: 'match' },
-    { kind: 'game', id: 'wanted' },
-    { kind: 'locked' },
-  ];
+  const slots = GAME_IDS.map((id) => ({ kind: 'game', id }));
 
   const renderSlot = (slot, opts) => {
-    if (slot.kind === 'locked') return <LockedTile size={opts.compactSize} />;
     const isFeatured = slot.id === featuredId;
     const game = GAMES[slot.id];
     if (isFeatured) {
@@ -225,7 +227,7 @@ function PlayView({ featuredId, onPick, isDesktop }) {
               {renderSlot(slot, {
                 featuredSize: 'large',
                 compactSize: 'large',
-                compactTiltFor: (id) => (id === 'wanted' ? 0.3 : -0.4),
+                compactTiltFor: (id) => COMPACT_TILTS[id] ?? 0,
               })}
             </div>
           ))}
@@ -267,11 +269,13 @@ function PlayView({ featuredId, onPick, isDesktop }) {
             })}
           </div>
         ))}
-        <WBox style={{ padding: '10px 12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', transform: 'rotate(0.2deg)' }}>
+        <WBox style={{ padding: '10px 12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', transform: 'rotate(0.2deg)', flexWrap: 'wrap', gap: 6 }}>
           <MonoText style={{ fontSize: 10, opacity: 0.7 }}>BEST</MonoText>
-          <div style={{ display: 'flex', gap: 14 }}>
-            <MonoText style={{ fontSize: 13, fontWeight: 700 }}>🎴 {bestMatch ?? '—'}</MonoText>
-            <MonoText style={{ fontSize: 13, fontWeight: 700 }}>🤠 {bestWanted ?? 0}</MonoText>
+          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+            <MonoText style={{ fontSize: 12, fontWeight: 700 }}>🎴 {bestMatch ?? '—'}</MonoText>
+            <MonoText style={{ fontSize: 12, fontWeight: 700 }}>🤠 {bestWanted ?? 0}</MonoText>
+            <MonoText style={{ fontSize: 12, fontWeight: 700 }}>🔁 {bestEcho ?? 0}</MonoText>
+            <MonoText style={{ fontSize: 12, fontWeight: 700 }}>🚧 {bestDodge ? (bestDodge / 1000).toFixed(1) + 's' : '0s'}</MonoText>
           </div>
         </WBox>
       </div>
@@ -287,6 +291,8 @@ function StatsView({ isDesktop }) {
   const [medium] = useLocalStorage('eg:mem:best:Medium', null);
   const [hard] = useLocalStorage('eg:mem:best:Hard', null);
   const [bestWanted] = useLocalStorage('eg:wanted:best', 0);
+  const [bestEcho] = useLocalStorage('eg:echo:best', 0);
+  const [bestDodge] = useLocalStorage('eg:dodge:best', 0);
   const matchBests = { Easy: easy, Medium: medium, Hard: hard };
 
   return (
@@ -310,12 +316,28 @@ function StatsView({ isDesktop }) {
         </div>
       </StatGroup>
 
-      <StatGroup title="🤠 WANTED · best round">
-        <WBox thick style={{ padding: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center', transform: 'rotate(-0.3deg)', boxShadow: `0 4px 0 ${INK}` }}>
-          <MonoText style={{ fontSize: 11, opacity: 0.7 }}>HIGHEST ROUND</MonoText>
-          <div style={{ fontSize: 32, fontWeight: 900 }}>{bestWanted || <span style={{ opacity: 0.35 }}>0</span>}</div>
-        </WBox>
-      </StatGroup>
+      <div style={{ display: 'grid', gridTemplateColumns: isDesktop ? 'repeat(3, 1fr)' : '1fr', gap: 14 }}>
+        <StatGroup title="🤠 WANTED · best round">
+          <WBox thick style={{ padding: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center', transform: 'rotate(-0.3deg)', boxShadow: `0 4px 0 ${INK}` }}>
+            <MonoText style={{ fontSize: 11, opacity: 0.7 }}>HIGHEST</MonoText>
+            <div style={{ fontSize: 30, fontWeight: 900 }}>{bestWanted || <span style={{ opacity: 0.35 }}>0</span>}</div>
+          </WBox>
+        </StatGroup>
+
+        <StatGroup title="🔁 ECHO · best round">
+          <WBox thick style={{ padding: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center', transform: 'rotate(0.3deg)', boxShadow: `0 4px 0 ${INK}` }}>
+            <MonoText style={{ fontSize: 11, opacity: 0.7 }}>HIGHEST</MonoText>
+            <div style={{ fontSize: 30, fontWeight: 900 }}>{bestEcho || <span style={{ opacity: 0.35 }}>0</span>}</div>
+          </WBox>
+        </StatGroup>
+
+        <StatGroup title="🚧 DODGE · longest run">
+          <WBox thick style={{ padding: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center', transform: 'rotate(-0.2deg)', boxShadow: `0 4px 0 ${INK}` }}>
+            <MonoText style={{ fontSize: 11, opacity: 0.7 }}>SECONDS</MonoText>
+            <div style={{ fontSize: 30, fontWeight: 900 }}>{bestDodge ? (bestDodge / 1000).toFixed(1) : <span style={{ opacity: 0.35 }}>0</span>}</div>
+          </WBox>
+        </StatGroup>
+      </div>
 
       <div style={{ marginTop: 'auto' }}>
         <MonoText style={{ fontSize: 10, opacity: 0.5 }}>
@@ -350,6 +372,8 @@ function SettingsView() {
   const [, setBestMedium] = useLocalStorage('eg:mem:best:Medium', null);
   const [, setBestHard] = useLocalStorage('eg:mem:best:Hard', null);
   const [, setBestWanted] = useLocalStorage('eg:wanted:best', 0);
+  const [, setBestEcho] = useLocalStorage('eg:echo:best', 0);
+  const [, setBestDodge] = useLocalStorage('eg:dodge:best', 0);
   const [confirmReset, setConfirmReset] = useState(false);
 
   const resetStats = () => {
@@ -357,6 +381,8 @@ function SettingsView() {
     setBestMedium(null);
     setBestHard(null);
     setBestWanted(0);
+    setBestEcho(0);
+    setBestDodge(0);
     setConfirmReset(false);
   };
 
@@ -420,7 +446,7 @@ function SettingsView() {
         <WBox style={{ padding: 14, transform: 'rotate(-0.3deg)' }}>
           <MonoText style={{ fontSize: 10, opacity: 0.6 }}>EMOJI GAMES</MonoText>
           <div style={{ fontSize: 14, marginTop: 4, lineHeight: 1.5 }}>
-            two tiny games, one warm paper background. built with React + Vite.
+            four tiny games, one warm paper background. built with React + Vite.
           </div>
         </WBox>
       </SettingRow>
@@ -606,58 +632,3 @@ function SquareTile({ game, onClick, tilt = 0, size = 'normal' }) {
   );
 }
 
-function LockedTile({ size = 'normal' }) {
-  const big = size === 'large';
-  const row = size === 'row';
-
-  if (row) {
-    return (
-      <div
-        style={{
-          border: `2.5px solid ${INK}`,
-          background: 'transparent',
-          borderRadius: 10,
-          padding: '12px 14px',
-          opacity: 0.55,
-          transform: 'rotate(-0.3deg)',
-          boxShadow: `0 5px 0 ${INK}40`,
-          animation: 'fadeInUp 0.3s ease both',
-          display: 'flex',
-          alignItems: 'center',
-          gap: 14,
-          width: '100%',
-        }}
-      >
-        <div style={{ fontSize: 30, lineHeight: 1 }}>🔒</div>
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ fontSize: 15, fontWeight: 900 }}>???</div>
-          <div style={{ fontSize: 11, opacity: 0.7 }}>coming soon</div>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div
-      style={{
-        border: `2.5px solid ${INK}`,
-        background: 'transparent',
-        borderRadius: 10,
-        padding: big ? 18 : 12,
-        textAlign: 'center',
-        opacity: 0.55,
-        transform: 'rotate(-0.3deg)',
-        boxShadow: `0 5px 0 ${INK}40`,
-        animation: 'fadeInUp 0.3s ease both',
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-      }}
-    >
-      <div style={{ fontSize: big ? 56 : 36 }}>🔒</div>
-      <div style={{ fontSize: big ? 18 : 14, fontWeight: 900, marginTop: big ? 8 : 4 }}>???</div>
-      <div style={{ fontSize: big ? 11 : 10, opacity: 0.7, marginTop: 2 }}>coming soon</div>
-    </div>
-  );
-}

@@ -269,23 +269,44 @@ export default function WantedGame({ onBack }) {
                 title={timeLeft === 0 ? "TIME'S UP" : 'WRONG PICK'}
                 body={`you reached round ${round}. best: ${bestRound ?? 0}.`}
                 action={
-                  <button
-                    onClick={restart}
-                    style={{
-                      border: `2px solid ${INK}`,
-                      background: ACCENT,
-                      color: 'white',
-                      padding: '10px 22px',
-                      fontSize: 14,
-                      fontWeight: 800,
-                      letterSpacing: 1,
-                      borderRadius: 8,
-                      boxShadow: `0 4px 0 ${INK}`,
-                      fontFamily: 'inherit',
-                    }}
-                  >
-                    PLAY AGAIN ▶
-                  </button>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}>
+                    <button
+                      onClick={restart}
+                      style={{
+                        border: `2px solid ${INK}`,
+                        background: ACCENT,
+                        color: 'white',
+                        padding: '10px 22px',
+                        fontSize: 14,
+                        fontWeight: 800,
+                        letterSpacing: 1,
+                        borderRadius: 8,
+                        boxShadow: `0 4px 0 ${INK}`,
+                        fontFamily: 'inherit',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      PLAY AGAIN ▶
+                    </button>
+                    <button
+                      onClick={onBack}
+                      style={{
+                        border: `1.5px solid ${INK}`,
+                        background: 'transparent',
+                        color: INK,
+                        padding: '6px 16px',
+                        fontSize: 12,
+                        fontWeight: 600,
+                        letterSpacing: 0.5,
+                        borderRadius: 999,
+                        fontFamily: 'inherit',
+                        cursor: 'pointer',
+                        opacity: 0.8,
+                      }}
+                    >
+                      ‹ all games
+                    </button>
+                  </div>
                 }
               />
             )}
