@@ -359,11 +359,11 @@ function StatGroup({ title, children }) {
 
 // ─── Settings View ─────────────────────────────────────────────────────
 const ACCENT_PRESETS = [
-  { value: '#ff6b3d', label: 'sunset' },
-  { value: '#e84a8a', label: 'flamingo' },
-  { value: '#3d8bff', label: 'cobalt' },
-  { value: '#16a34a', label: 'fern' },
-  { value: '#1f1d1a', label: 'ink' },
+  { value: '#2563eb', label: 'cobalt' },
+  { value: '#7c3aed', label: 'violet' },
+  { value: '#db2777', label: 'magenta' },
+  { value: '#0d9488', label: 'teal' },
+  { value: '#0f172a', label: 'slate' },
 ];
 
 function SettingsView() {

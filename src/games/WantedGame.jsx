@@ -343,7 +343,7 @@ function Overlay({ title, body, action }) {
         gap: 12,
         padding: 24,
         textAlign: 'center',
-        background: 'rgba(250, 246, 238, 0.92)',
+        background: 'rgba(248, 250, 252, 0.92)',
         backdropFilter: 'blur(4px)',
         zIndex: 5,
       }}

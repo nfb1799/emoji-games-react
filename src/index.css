@@ -1,10 +1,10 @@
 :root {
-  --paper: #faf6ee;
-  --paper-bg: #efe9dc;
-  --ink: #1f1d1a;
-  --ink-soft: rgba(31, 29, 26, 0.55);
-  --accent: #ff6b3d;
-  --mute: #cdc7b8;
+  --paper: #f8fafc;
+  --paper-bg: #e2e8f0;
+  --ink: #0f172a;
+  --ink-soft: rgba(15, 23, 42, 0.55);
+  --accent: #2563eb;
+  --mute: #94a3b8;
   --hand: 'Kalam', 'Comic Sans MS', cursive;
   --neutral: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   --mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
@@ -28,7 +28,7 @@ body,
 
 body {
   background: var(--paper-bg);
-  background-image: radial-gradient(circle at 1px 1px, rgba(31, 29, 26, 0.08) 1px, transparent 0);
+  background-image: radial-gradient(circle at 1px 1px, rgba(15, 23, 42, 0.10) 1px, transparent 0);
   background-size: 16px 16px;
   color: var(--ink);
   font-family: var(--family);
@@ -81,9 +81,9 @@ textarea {
   height: 10px;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(31, 29, 26, 0.25);
+  background: rgba(15, 23, 42, 0.25);
   border-radius: 8px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(31, 29, 26, 0.4);
+  background: rgba(15, 23, 42, 0.4);
 }
